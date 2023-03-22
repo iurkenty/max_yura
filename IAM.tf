@@ -6,8 +6,8 @@ resource "aws_iam_saml_provider" "azure_ad" {
 data "aws_caller_identity" "current" {}
 
 resource "aws_iam_role" "idp_assume_role" {
-  name   = "idp_assume_role"
-  policy = jsonencode({
+  name               = "idp_assume_role"
+  assume_role_policy = jsonencode({
 
   "Version": "2012-10-17",
   "Statement": {
@@ -23,5 +23,4 @@ resource "aws_iam_role" "idp_assume_role" {
     }
   }
 })
-  assume_role_policy = ""
 }
