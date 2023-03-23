@@ -10,7 +10,7 @@ resource "aws_iam_saml_provider" "azure_ad" {
 resource "aws_iam_role" "idp_admin_role" {
   name                = "idp_assume_role"
   managed_policy_arns = [var.admin_policy_arn]
-  assume_role_policy  = jsonencode({
+  assume_role_policy = jsonencode({
 
     "Version" : "2012-10-17",
     "Statement" : {
@@ -36,19 +36,19 @@ resource "aws_iam_access_key" "provisioner_creds" {
   user = aws_iam_user.azure_ad_provisioner.name
 }
 resource "aws_iam_user_policy" "list_roles_policy" {
-  name   = "list_roles"
-  user   = aws_iam_user.azure_ad_provisioner.name
+  name = "list_roles"
+  user = aws_iam_user.azure_ad_provisioner.name
   policy = jsonencode(
-{
-"Version": "2012-10-17",
-"Statement": [
-{
-"Effect": "Allow",
-"Action": [
-"iam:ListRoles"
-],
-"Resource": "*"
-}
-]
-})
+    {
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+          "Effect" : "Allow",
+          "Action" : [
+            "iam:ListRoles"
+          ],
+          "Resource" : "*"
+        }
+      ]
+  })
 }
