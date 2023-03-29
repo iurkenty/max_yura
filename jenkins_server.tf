@@ -30,6 +30,7 @@ module "jenkins_server" {
 
   name                        = var.ec2_name
   ami                         = data.aws_ami_ids.ubuntu_ami.id
+  key_name                    = module.jenkins_ssh_key.key_pair_name
   instance_type               = var.instance_type
   availability_zone           = module.vpc.azs[0]
   subnet_id                   = element(module.vpc.public_subnets, 0)
