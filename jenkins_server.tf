@@ -7,30 +7,41 @@ module "jenkins_sg" {
   vpc_id      = module.vpc.vpc_id
 
   ingress_cidr_blocks = ["0.0.0.0/0"]
-  ingress_rules       = ["ssh-tcp"]
+  ingress_rules       = ["ssh-tcp", "http-8080-tcp"]
   egress_rules        = ["all-all"]
 }
-data "aws_ami_ids" "ubuntu_ami" {
-  owners = ["amazon"]
-
+// TODO filter to get the latest ubuntu ami
+data "aws_ami" "latest_ubuntu" {
+  most_recent = true
+  owners      = ["099720109477"] # Canonical account ID for Ubuntu
   filter {
     name   = "name"
-    values = ["ubuntu/images/ubuntu-*-*-amd64-server-*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+  }
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
   }
 }
 // A key pair for SSH
-module "jenkins_ssh_key" {
+module "ssh_key" {
   source             = "terraform-aws-modules/key-pair/aws"
-  key_name           = var.ssh_key_name
+  key_name           = var.ec2_name
   create_private_key = true
 }
+resource "local_file" "ssh_key_pair" {
+  filename = "${var.ec2_name}.pem"
+  content  = module.ssh_key.private_key_pem
+  file_permission = "0600"
+}
+// TODO ALB and ACM cert
 // Jenkins server
 module "jenkins_server" {
   source = "terraform-aws-modules/ec2-instance/aws"
 
   name                        = var.ec2_name
-  ami                         = data.aws_ami_ids.ubuntu_ami.id
-  key_name                    = module.jenkins_ssh_key.key_pair_name
+  ami                         = data.aws_ami.latest_ubuntu.id
+  key_name                    = module.ssh_key.key_pair_name
   instance_type               = var.instance_type
   availability_zone           = module.vpc.azs[0]
   subnet_id                   = element(module.vpc.public_subnets, 0)
@@ -38,6 +49,7 @@ module "jenkins_server" {
   associate_public_ip_address = var.public_ip_address_yes_no
   disable_api_stop            = false
 
+  user_data                   = file("./jenkins.sh")
   create_iam_instance_profile = var.create_instance_profile
 
   enable_volume_tags = false
@@ -52,14 +64,4 @@ module "jenkins_server" {
       }
     }
   ]
-}
-// TODO learn Ansible concepts to be able to provision the block below
-// Ansible host for ec2 configuration
-resource "ansible_host" "host" {
-  name   = module.jenkins_server.public_dns
-  groups = [""]
-
-  variables = {
-
-  }
 }
