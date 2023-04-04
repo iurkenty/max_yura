@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages{
-        stage('Clean the Workspace'){
+        stage('Clean the Workspaces'){
             steps{
                script{
                   cleanWs()
