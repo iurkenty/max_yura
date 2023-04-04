@@ -27,6 +27,12 @@ pipeline {
                    branch: 'development'
                }
             }
+       }
+        stage('Docker Image Build'){
+            steps{
+               script{
+                  docker_image = docker.build "${IMAGE_NAME}"
+               }
+            }
         }
-    }
 }
