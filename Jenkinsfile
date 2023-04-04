@@ -54,5 +54,17 @@ pipeline {
                }
             }
         }
+        stage('Update k8s deployment file'){
+            steps{
+               script{
+
+                    sh """
+                    cat deployment.yml
+                    sed -i 's/${APP_NAME}.*/${APP_NAME}:${IMAGE_TAG}/g' deployment.yml
+                    cat deployment.yml
+                    """ 
+               }
+            }
+        }
     }
 }
