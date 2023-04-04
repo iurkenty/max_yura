@@ -23,7 +23,7 @@ pipeline {
             steps{
                script{
                    git credentialsId: 'github',
-                   url: 'https://github.com/iurkenty/max_yura.git'
+                   url: 'https://github.com/iurkenty/max_yura.git',
                    branch: 'development'
                }
             }
