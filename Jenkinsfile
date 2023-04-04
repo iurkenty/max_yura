@@ -31,7 +31,7 @@ pipeline {
         stage('Docker Image Build'){
             steps{
                script{
-                  docker_image = docker.build "${IMAGE_NAME}", "app/"
+                  docker_image = docker.build "${IMAGE_NAME}", "./app/Dockerfile"
                }
             }
         }
