@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: flask-app
-template:
+  template:
     metadata:
       labels:
         app: flask-app
@@ -14,5 +14,9 @@ template:
       containers:
       - name: flask-app-deploy
         image: iurkenty/cicd_proj:v1
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
         ports:
         - containerPort: 5000

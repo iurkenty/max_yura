@@ -3,6 +3,7 @@ pipeline {
 
     environment{
 
+        GITHUB_EMAIL       = "vadaturschii.iurii@gmail.com"
         DOCKERHUB_USERNAME = "iurkenty"
         APP_NAME           = "cicd_proj"
         IMAGE_TAG          = "${BUILD_NUMBER}" // BUILD_NUMBER and other vars could be found at http://<Jenkins>:<port>/env-vars.html
@@ -66,5 +67,21 @@ pipeline {
                }
             }
         }
+        stage('push k8s manifest to GitHub')
+           steps{
+               script{
+
+                   sh """
+                     git config --global user.name "${DOCKERHUB_USERNAME}"
+                     git config --globale user.email "${GITHUB_EMAIL}"
+                     git add deployment.yml
+                     git commit -m "updated the deployment.yml"
+                   """ 
+                    withCredentials{[gitUsername(credentialsId: 'github', gitToolName: 'Default')]} {
+
+                    sh "git push https://github.com/iurkenty/max_yura.git development"    
+                   }
+               }
+           }
     }
 }
