@@ -73,7 +73,7 @@ pipeline {
 
                    sh """
                      git config --global user.name "${DOCKERHUB_USERNAME}"
-                     git config --globale user.email "${GITHUB_EMAIL}"
+                     git config --global user.email "${GITHUB_EMAIL}"
                      git add deployment.yml
                      git commit -m "updated the deployment.yml"
                    """ 
