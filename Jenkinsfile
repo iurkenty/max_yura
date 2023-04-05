@@ -3,6 +3,7 @@ pipeline {
 
     environment{
 
+        JENKINS_CD_URL     = "http://52.33.147.5:8080/job/argocd_private/buildWithParameters?token=argocd-config"
         GITHUB_EMAIL       = "vadaturschii.iurii@gmail.com"
         DOCKERHUB_USERNAME = "iurkenty"
         APP_NAME           = "cicd_proj"
@@ -55,34 +56,42 @@ pipeline {
                }
             }
         }
-        stage('Update k8s deployment file'){
+//CD portion of the pipeline
+//        stage('Update k8s deployment file'){
+//            steps{
+//               script{
+//
+//                    sh """
+//                    cat deployment.yml
+//                    sed -i 's/${APP_NAME}.*/${APP_NAME}:${IMAGE_TAG}/g' deployment.yml
+//                    cat deployment.yml
+//                    """ 
+//               }
+//            }
+//        }
+//        stage('push k8s manifest to GitHub'){
+//           steps{
+//               script{
+//
+//                   sh """
+//                     git config --global user.name "${DOCKERHUB_USERNAME}"
+//                     git config --global user.email "${GITHUB_EMAIL}"
+//                     git add deployment.yml
+//                     git commit -m "updated the deployment.yml"
+//                   """ 
+//                    withCredentials([gitUsernamePassword(credentialsId: 'github', gitToolName: 'Default')]) {
+//
+//                    sh "git push https://github.com/iurkenty/max_yura.git development"    
+//                   }
+//               }
+//           }
+//       }
+         stage('Trigger ArgoCD job'){
             steps{
-               script{
-
-                    sh """
-                    cat deployment.yml
-                    sed -i 's/${APP_NAME}.*/${APP_NAME}:${IMAGE_TAG}/g' deployment.yml
-                    cat deployment.yml
-                    """ 
-               }
+                script{
+                    sh "curl -v -k --user admin:115a17f153948c165ab5475d84d7382675 -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' "${JENKINS_CD_URL}""
+                }
             }
-        }
-        stage('push k8s manifest to GitHub'){
-           steps{
-               script{
-
-                   sh """
-                     git config --global user.name "${DOCKERHUB_USERNAME}"
-                     git config --global user.email "${GITHUB_EMAIL}"
-                     git add deployment.yml
-                     git commit -m "updated the deployment.yml"
-                   """ 
-                    withCredentials([gitUsernamePassword(credentialsId: 'github', gitToolName: 'Default')]) {
-
-                    sh "git push https://github.com/iurkenty/max_yura.git development"    
-                   }
-               }
-           }
-       }
+         }
     }
 }
