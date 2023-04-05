@@ -3,7 +3,7 @@ pipeline {
 
     environment{
 
-        JENKINS_CD_URL     = "http://52.33.147.5:8080/job/argocd_private/buildWithParameters?token=argocd-config"
+        JENKINS_CD_URL     = "http://52.33.147.5:8080/job/argocd/buildWithParameters?token=argocd-config"
         GITHUB_EMAIL       = "vadaturschii.iurii@gmail.com"
         DOCKERHUB_USERNAME = "iurkenty"
         APP_NAME           = "cicd_proj"
@@ -89,7 +89,7 @@ pipeline {
          stage('Trigger ArgoCD job'){
             steps{
                 script{
-                    sh "curl -v -k --user admin:115a17f153948c165ab5475d84d7382675 -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' "${JENKINS_CD_URL}""
+                    sh "curl -v -k --user admin:115a17f153948c165ab5475d84d7382675 -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' "${JENKINS_CD_URL}" "
                 }
             }
          }
