@@ -77,7 +77,7 @@ pipeline {
                      git add deployment.yml
                      git commit -m "updated the deployment.yml"
                    """ 
-                    withCredentials{[gitUsername(credentialsId: 'github', gitToolName: 'Default')]} {
+                    withCredentials([gitUsernamePassword(credentialsId: 'github', gitToolName: 'Default')]) {
 
                     sh "git push https://github.com/iurkenty/max_yura.git development"    
                    }
