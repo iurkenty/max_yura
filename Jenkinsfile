@@ -1,9 +1,11 @@
+//Source https://www.youtube.com/watch?v=kuSdi8bDztk
+
 pipeline {
     agent any
 
     environment{
 
-        JENKINS_CD_URL     = "http://52.33.147.5:8080/job/argocd/buildWithParameters?token=argocd-config"
+        JENKINS_CD_URL     = "http://52.33.147.5:8080/job/argocd/buildWithParameters?token=argocd-config" // to buildWithParameters do 
         GITHUB_EMAIL       = "vadaturschii.iurii@gmail.com"
         DOCKERHUB_USERNAME = "iurkenty"
         APP_NAME           = "cicd_proj"
