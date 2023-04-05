@@ -67,7 +67,7 @@ pipeline {
                }
             }
         }
-        stage('push k8s manifest to GitHub')
+        stage('push k8s manifest to GitHub'){
            steps{
                script{
 
@@ -83,5 +83,6 @@ pipeline {
                    }
                }
            }
+       }
     }
 }
