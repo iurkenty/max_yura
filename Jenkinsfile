@@ -89,7 +89,7 @@ pipeline {
          stage('Trigger ArgoCD job'){
             steps{
                 script{
-                    sh "curl -v -k --user admin:115a17f153948c165ab5475d84d7382675 -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' "${JENKINS_CD_URL}" "
+                    sh "curl -v -k --user admin:115a17f153948c165ab5475d84d7382675 -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' '${JENKINS_CD_URL}' "
                 }
             }
          }
