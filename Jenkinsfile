@@ -5,9 +5,9 @@ pipeline {
 
     environment{
 
-        JENKINS_CD_URL     = "http://52.33.147.5:8080/job/argocd/buildWithParameters?token=argocd-config" // to buildWithParameters do 
-        GITHUB_EMAIL       = "vadaturschii.iurii@gmail.com"
-        DOCKERHUB_USERNAME = "iurkenty"
+        JENKINS_CD_URL     = "http://<host>:<port>/job/argocd/buildWithParameters?token=argocd-config" // to buildWithParameters do
+        GITHUB_EMAIL       = "<email@email.com>"
+        DOCKERHUB_USERNAME = "<dockerhub_username>"
         APP_NAME           = "cicd_proj"
         IMAGE_TAG          = "${BUILD_NUMBER}" // BUILD_NUMBER and other vars could be found at http://<Jenkins>:<port>/env-vars.html
         IMAGE_NAME         = "${DOCKERHUB_USERNAME}" + "/" + "${APP_NAME}"
