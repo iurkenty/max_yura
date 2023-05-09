@@ -10,6 +10,14 @@ module "jenkins_sg" {
   ingress_rules       = ["ssh-tcp", "http-8080-tcp"]
   egress_rules        = ["all-all"]
 }
+resource "aws_security_group_rule" "personal_ip" {
+  cidr_blocks       = [var.my_ip]
+  from_port         = 0
+  protocol          = "tcp"
+  security_group_id = module.jenkins_sg.security_group_id
+  to_port           = 65535
+  type              = "ingress"
+}
 data "aws_ami" "latest_ubuntu" {
   most_recent = true
   owners      = ["099720109477"] # Canonical account ID for Ubuntu
@@ -28,10 +36,10 @@ module "ssh_key" {
   key_name           = var.ec2_name
   create_private_key = true
 }
-resource "local_file" "ssh_key_pair" {
-  filename = "${var.ec2_name}.pem"
-  content  = module.ssh_key.private_key_pem
-  file_permission = "0600"
+resource "aws_ssm_parameter" "ssh_key" {
+  name        = var.ssh_key_ssm_parameter_name
+  type        = var.ssm_type
+  value       = module.ssh_key.private_key_pem
 }
 resource "aws_eip" "eip" {
   instance = module.jenkins_server.id

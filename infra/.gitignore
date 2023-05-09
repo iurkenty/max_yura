@@ -6,4 +6,4 @@
 /*.pem
 /*.tfvars
 ansible/
-../AWS_DevOps_Prod.xml
+/AWS_DevOps_Prod.xml

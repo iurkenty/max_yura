@@ -1,9 +1,13 @@
+//Source https://www.youtube.com/watch?v=kuSdi8bDztk
+
 pipeline {
     agent any
 
     environment{
 
-        DOCKERHUB_USERNAME = "iurkenty"
+        JENKINS_CD_URL     = "http://<host>:<port>/job/argocd/buildWithParameters?token=argocd-config" // to buildWithParameters do
+        GITHUB_EMAIL       = "<email@email.com>"
+        DOCKERHUB_USERNAME = "<dockerhub_username>"
         APP_NAME           = "cicd_proj"
         IMAGE_TAG          = "${BUILD_NUMBER}" // BUILD_NUMBER and other vars could be found at http://<Jenkins>:<port>/env-vars.html
         IMAGE_NAME         = "${DOCKERHUB_USERNAME}" + "/" + "${APP_NAME}"
@@ -54,5 +58,42 @@ pipeline {
                }
             }
         }
+//CD portion of the pipeline
+//        stage('Update k8s deployment file'){
+//            steps{
+//               script{
+//
+//                    sh """
+//                    cat deployment.yml
+//                    sed -i 's/${APP_NAME}.*/${APP_NAME}:${IMAGE_TAG}/g' deployment.yml
+//                    cat deployment.yml
+//                    """ 
+//               }
+//            }
+//        }
+//        stage('push k8s manifest to GitHub'){
+//           steps{
+//               script{
+//
+//                   sh """
+//                     git config --global user.name "${DOCKERHUB_USERNAME}"
+//                     git config --global user.email "${GITHUB_EMAIL}"
+//                     git add deployment.yml
+//                     git commit -m "updated the deployment.yml"
+//                   """ 
+//                    withCredentials([gitUsernamePassword(credentialsId: 'github', gitToolName: 'Default')]) {
+//
+//                    sh "git push https://github.com/iurkenty/max_yura.git development"    
+//                   }
+//               }
+//           }
+//       }
+         stage('Trigger ArgoCD job'){
+            steps{
+                script{
+                    sh "curl -v -k --user admin:115a17f153948c165ab5475d84d7382675 -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' '${JENKINS_CD_URL}' "
+                }
+            }
+         }
     }
 }
