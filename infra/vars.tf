@@ -6,6 +6,8 @@ variable "identity_provider_name" {}
 variable "admin_policy_arn" {}
 // Variable for developer tags
 variable "developer_name" {}
+variable "ssh_key_ssm_parameter_name" {}
+variable "ssm_type" {}
 // VPC
 variable "vpc_cidr" {}
 variable "vpc_name" {}
