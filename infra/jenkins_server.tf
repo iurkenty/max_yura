@@ -10,8 +10,8 @@ module "jenkins_sg" {
   ingress_rules       = ["ssh-tcp", "http-8080-tcp"]
   egress_rules        = ["all-all"]
 }
-resource "aws_security_group_rule" "iurii_personal" {
-  cidr_blocks       = ["76.149.2.235/32"]
+resource "aws_security_group_rule" "personal_ip" {
+  cidr_blocks       = [var.my_ip]
   from_port         = 0
   protocol          = "tcp"
   security_group_id = module.jenkins_sg.security_group_id

@@ -15,6 +15,7 @@ variable "nat_gateway" {}
 variable "vpn_gateway" {}
 variable "dns_hostnames_bool" {}
 // EC2
+variable "my_ip" {} # an IP address to access the server
 variable "ec2_name" {}
 variable "instance_type" {}
 variable "public_ip_address_bool" {}
